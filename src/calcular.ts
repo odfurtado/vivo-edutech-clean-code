@@ -1,61 +1,95 @@
-function calcular(d: number, h: number, p: string) {
+const PERFIL_COMUM = "R";
+const PERFIL_SILVER = "S";
+const PERFIL_GOLD = "G";
+const PERFIL_DIAMOND = "D";
+const HORARIO_COMERCIAL_INICIO = 7;
+const HORARIO_NOTURNO_INICIO = 18;
+const HORARIO_MADRUGADA_INICIO = 0;
+const HORA_INICIO = 0;
+const HORA_FIM = 23;
+const VALOR_FRETE_MINIMO = 3;
+const DISTANCIA_MINIMA = 1;
+const TAXA_NOTURNA = 1.5;
+const TAXA_MADRUGADA = 3;
+const TAXA_DESCONTO_PERFIL_SILVER = 0.9;
+const TAXA_DESCONTO_PERFIL_GOLD = 0.8;
+const VALOR_FRETE_GRATIS = 0;
+const PRECISAO = 2;
 
-    if (d != undefined && d > 0) {
+function calcularFrete(distancia: number, hora: number, perfilDoCliente: string) {
+    validarParametrosEntrada(distancia, hora, perfilDoCliente);
+    if (ehClienteComFreteGratis(perfilDoCliente)) {
+        return VALOR_FRETE_GRATIS;
+    }
+    let valorDaDistancia = aplicarCalculaDaDistancia(distancia);
+    let valorComTaxaDeHorario = aplicarCalculoDaTaxaHorario(valorDaDistancia, hora);
+    let valorComDescontoDoPerfil = aplicarCalculoDeDescontoDoPerfilDoCliente(valorComTaxaDeHorario, perfilDoCliente);
+    return aplicarCalculoDeFreteMinimoEPrecisao(valorComDescontoDoPerfil);
+}
 
-        if (h != undefined && h >= 0 && h <= 23) {
-
-            if (p != null && p != undefined && p != "") {
-
-                let v1 = 0;
-                let v2 = 0;
-
-                if (h >= 7 && h < 18) {
-                    v1 = d / 1000;
-                }
-            
-                if (h >= 18 && h < 23) {
-                    v1 = (d / 1000) * 1.5;
-                }
-
-                if (h >= 0 && h < 7 ) {
-                    v1 = (d / 1000) * 3;
-                }
-
-                v2 = v1;
-
-                if (p === "S") {
-                    v2 = v1 * 0.9
-                }
-
-                if (p === "G") {
-                    v2 = v1 * 0.8;
-                }
-
-                if (p === "D") {
-                    return 0;
-                }
-
-                if (v2 < 3) {
-
-                    return 3;
-                } else {
-
-                    return parseFloat(v2.toFixed(2));
-                }
-
-            } else {
-                
-                return -3;
-            }
-
-        } else {
-
-            return -2;
-        }
-    } else {
-
-        return -1;
+function validarParametrosEntrada(distancia: number, hora: number, perfilDoCliente: string) {
+    if (!distanciaValida(distancia)) {
+        throw new Error("Distancia inválida.");
+    }
+    if (!horaValida(hora)) {
+        throw new Error("Hora inválida.");
+    }
+    if (!perfilDoClienteValido(perfilDoCliente)) {
+        throw new Error("Perfil do cliente inválido.");
     }
 }
 
-export default calcular;
+function distanciaValida(distancia: number) {
+    return distancia >= DISTANCIA_MINIMA;
+}
+
+function horaValida(hora: number) {
+    return hora >= HORA_INICIO && hora <= HORA_FIM;
+}
+
+function perfilDoClienteValido(perfilDoCliente: string) {
+    return perfilDoCliente === PERFIL_COMUM || perfilDoCliente === PERFIL_SILVER || 
+        perfilDoCliente === PERFIL_GOLD || perfilDoCliente === PERFIL_DIAMOND;
+}
+
+function ehClienteComFreteGratis(perfilDoCliente: string) {
+    return perfilDoCliente === PERFIL_DIAMOND;
+}
+
+function aplicarCalculaDaDistancia(distancia: number) {
+    return distancia / 1000;
+}
+
+function aplicarCalculoDaTaxaHorario(valor: number, hora: number) {
+    if (ehDeMadrugada(hora)) {
+        return valor * TAXA_MADRUGADA;
+    } else if (ehHorarioComercial(hora)) {
+        return valor;
+    } 
+    return valor * TAXA_NOTURNA;
+}
+
+function ehDeMadrugada(hora: number) {
+    return hora >= HORARIO_MADRUGADA_INICIO && hora < HORARIO_COMERCIAL_INICIO;
+}
+
+function ehHorarioComercial(hora: number) {
+    return hora >= HORARIO_COMERCIAL_INICIO && hora < HORARIO_NOTURNO_INICIO;
+}
+
+function aplicarCalculoDeDescontoDoPerfilDoCliente(valor: number, perfilDoCliente: string) {
+    if (perfilDoCliente === PERFIL_SILVER) {
+        return valor * TAXA_DESCONTO_PERFIL_SILVER
+    } else if (perfilDoCliente === PERFIL_GOLD) {
+        return  valor * TAXA_DESCONTO_PERFIL_GOLD;
+    }
+    return valor;
+}
+
+function aplicarCalculoDeFreteMinimoEPrecisao(valor: number) {
+    return valor < VALOR_FRETE_MINIMO ? 
+        VALOR_FRETE_MINIMO : 
+        parseFloat(valor.toFixed(PRECISAO));
+}
+
+export default calcularFrete;

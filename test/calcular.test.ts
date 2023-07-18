@@ -4,40 +4,35 @@ test("Não deve calcular frete com a distancia zerada", () => {
     const distancia = 0;
     const hora = 0;
     const perfil = "";
-    const valor = calcular(distancia, hora, perfil);
-    expect(valor).toBe(-1);
+    expect(() => calcular(distancia, hora, perfil)).toThrowError("Distancia inválida.");
 });
 
 test("Não deve calcular frete com a distancia negativa", () => {
     const distancia = -1;
     const hora = 0;
     const perfil = "";
-    const valor = calcular(distancia, hora, perfil);
-    expect(valor).toBe(-1);
+    expect(() => calcular(distancia, hora, perfil)).toThrowError("Distancia inválida.");
 });
 
 test("Não deve calcular frete com a hora negativa", () => {
     const distancia = 600;
     const hora = -1;
     const perfil = "";
-    const valor = calcular(distancia, hora, perfil);
-    expect(valor).toBe(-2);
+    expect(() => calcular(distancia, hora, perfil)).toThrowError("Hora inválida.");
 });
 
 test("Não deve calcular frete com a hora maior que 23", () => {
     const distancia = 600;
     const hora = 24;
     const perfil = "";
-    const valor = calcular(distancia, hora, perfil);
-    expect(valor).toBe(-2);
+    expect(() => calcular(distancia, hora, perfil)).toThrowError("Hora inválida.");
 });
 
 test("Não deve calcular frete com o perfil do cliente vazia/nula", () => {
     const distancia = 600;
     const hora = 18;
     const perfil = "";
-    const valor = calcular(distancia, hora, perfil);
-    expect(valor).toBe(-3);
+    expect(() => calcular(distancia, hora, perfil)).toThrowError("Perfil do cliente inválido.");
 });
 
 test("Deve calcular o frete em horario comercial (07:00 - 17:59) - Cliente Comum", () => {
