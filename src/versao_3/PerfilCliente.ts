@@ -1,9 +1,9 @@
-const PERFIL_COMUM = "R";
+const PERFIL_REGULAR = "R";
 const PERFIL_PRATA = "S";
 const PERFIL_OURO = "G";
 const PERFIL_DIAMANTE = "D";
 
-export default class PerfilDoCliente {
+export default class PerfilCliente {
     constructor(readonly valor: Perfil) {
         if (!this.perfilDoClienteValido()) {
             throw new Error("Perfil do cliente inválido.");
@@ -11,11 +11,11 @@ export default class PerfilDoCliente {
     }
 
     private perfilDoClienteValido() {
-        return [PERFIL_COMUM, PERFIL_PRATA, PERFIL_OURO, PERFIL_DIAMANTE].includes(this.valor);
+        return [PERFIL_REGULAR, PERFIL_PRATA, PERFIL_OURO, PERFIL_DIAMANTE].includes(this.valor);
     }
 
-    ehPadrao() {
-        return this.valor === PERFIL_COMUM;
+    ehRegular() {
+        return this.valor === PERFIL_REGULAR;
     }
 
     ehPrata() {
@@ -31,4 +31,4 @@ export default class PerfilDoCliente {
     }
 }
 
-type Perfil = typeof PERFIL_COMUM | typeof PERFIL_PRATA | typeof PERFIL_OURO | typeof PERFIL_DIAMANTE;
+type Perfil = typeof PERFIL_REGULAR | typeof PERFIL_PRATA | typeof PERFIL_OURO | typeof PERFIL_DIAMANTE;

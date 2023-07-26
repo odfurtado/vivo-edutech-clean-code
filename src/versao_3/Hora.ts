@@ -14,7 +14,7 @@ export default class Hora {
     private horaValida() {
         return this.valor >= HORA_INICIO && this.valor <= HORA_FIM;
     }
-
+    
     ehDeMadrugada() {
         return this.valor >= HORARIO_MADRUGADA_INICIO && this.valor < HORARIO_COMERCIAL_INICIO;
     }

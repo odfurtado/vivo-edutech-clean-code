@@ -1,4 +1,4 @@
-import calcular from '../src/calcular';
+import calcular from '../../src/versao_2/calcular';
 
 test("Não deve calcular frete com a distancia zerada", () => {
     const distancia = 0;

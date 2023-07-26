@@ -7,7 +7,7 @@ export default class Distancia {
         }
     }
 
-    private distanciaValida() {
+    distanciaValida() {
         return this.valor >= DISTANCIA_MINIMA;
     }
 }
